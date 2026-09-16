@@ -7,7 +7,7 @@
 <style>
 :root {
   --bg:#0b1220; --panel:#121a2b; --line:#243049; --text:#e8eefc; --muted:#9aa8c7;
-  --teal:#14b8a6; --teal-dim:#0f766e; --good:#34d399;
+  --teal:#14b8a6;
 }
 * { box-sizing:border-box; }
 body { margin:0; font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial,sans-serif;
@@ -16,25 +16,32 @@ body { margin:0; font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial,sans-
 h1 { margin:0 0 6px; font-size:28px; }
 .sub { color:var(--muted); margin:0 0 22px; max-width:70ch; line-height:1.45; }
 .disclaimer { background:#1e293b; border:1px solid var(--line); border-radius:12px; padding:12px 14px; color:var(--muted); font-size:13px; margin-bottom:22px; }
-.grid2 { display:grid; grid-template-columns:1.1fr 0.9fr; gap:16px; margin-bottom:18px; }
-@media (max-width:900px) { .grid2 { grid-template-columns:1fr; } }
-.panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:18px; }
 .panel h2 { margin:0 0 12px; font-size:16px; letter-spacing:.02em; }
-.fit-row { display:grid; grid-template-columns:1fr 140px 42px; gap:8px; align-items:center; margin:6px 0; font-size:12px; }
+.fit-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(120px,220px) 42px; gap:8px; align-items:center; margin:6px 0; font-size:12px; }
 .fit-label { color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .fit-row.ours .fit-label { color:var(--teal); font-weight:700; }
 .fit-track { height:10px; background:#0b1220; border-radius:999px; overflow:hidden; border:1px solid var(--line); }
 .fit-fill { height:100%; background:linear-gradient(90deg,#0f766e,var(--teal)); }
 .fit-row.ours .fit-fill { background:linear-gradient(90deg,#fbbf24,var(--teal)); }
 .fit-val { text-align:right; font-variant-numeric:tabular-nums; }
-.scatter { position:relative; height:340px; background:linear-gradient(#0b1220,#0b1220),
-  linear-gradient(to right, transparent 69.9%, #14b8a622 70%), linear-gradient(to top, transparent 69.9%, #14b8a622 70%);
-  background-color:#0b1220; border:1px solid var(--line); border-radius:12px; margin-top:8px; }
-.scatter .dot { position:absolute; width:10px; height:10px; border-radius:50%; background:#64748b; transform:translate(-50%,50%); }
-.scatter .dot.ours { width:16px; height:16px; background:var(--teal); box-shadow:0 0 0 4px #14b8a633; }
-.scatter .dot i { position:absolute; left:12px; bottom:2px; font-style:normal; font-size:10px; color:var(--muted); white-space:nowrap; }
-.scatter .dot.ours i { color:var(--teal); font-weight:700; }
-.axis { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; margin-top:6px; }
+.scatter-layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(240px,0.85fr); gap:18px; align-items:stretch; }
+@media (max-width:900px) { .scatter-layout { grid-template-columns:1fr; } }
+.scatter { position:relative; height:520px; background:
+  linear-gradient(to right, transparent 69.9%, #14b8a622 70%),
+  linear-gradient(to top, transparent 69.9%, #14b8a622 70%),
+  #0b1220;
+  border:1px solid var(--line); border-radius:12px; margin-top:4px; }
+.scatter .dot { position:absolute; width:11px; height:11px; border-radius:50%; background:#64748b; transform:translate(-50%,50%); }
+.scatter .dot.ours { width:16px; height:16px; background:var(--teal); box-shadow:0 0 0 4px #14b8a633; z-index:2; }
+.scatter .dot i.onplot { position:absolute; left:14px; top:-6px; font-style:normal; font-size:11px; color:var(--teal); font-weight:700; white-space:nowrap; }
+.axis { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; margin-top:8px; }
+.legend { list-style:none; margin:0; padding:0; max-height:520px; overflow:auto; font-size:12px; }
+.legend li { display:grid; grid-template-columns:14px 1fr; gap:8px; align-items:start; margin:0 0 10px; color:var(--muted); line-height:1.3; }
+.legend li.ours { color:#99f6e4; font-weight:600; }
+.legend .swatch { width:10px; height:10px; border-radius:50%; background:#64748b; margin-top:3px; }
+.legend li.ours .swatch { background:var(--teal); box-shadow:0 0 0 3px #14b8a633; }
+.legend em { display:block; font-style:normal; opacity:.75; font-size:11px; font-weight:400; }
 table.heat { width:100%; border-collapse:collapse; font-size:12px; }
 table.heat th, table.heat td { border:1px solid var(--line); padding:6px 5px; text-align:center; }
 table.heat th:first-child { text-align:left; max-width:220px; }
@@ -66,7 +73,7 @@ table.heat th:first-child { text-align:left; max-width:220px; }
 <body>
 <div class="wrap">
   <h1>Decodable readers — world field dashboard</h1>
-  <p class="sub">Pedagogically informed series surveyed for <strong>Phonics Moves / Phonics Glow</strong>. Not décor phonics. Not STELLAR Big Books. Not CEFR headword readers.</p>
+  <p class="sub">Pedagogically informed series surveyed for <strong>Phonics Moves / Phonics Glow</strong>.</p>
   <div class="disclaimer"><strong>Method:</strong> Scores are analytical judgments for Digital Literacy Studio product strategy, not publisher rankings or RCT outcomes. Weighted DLS-fit emphasises baseline strictness, story, dyslexia-informed design, Asia/home — not school-system lock-in.</div>
 
   <div class="insights">
@@ -75,18 +82,26 @@ table.heat th:first-child { text-align:left; max-width:220px; }
     <div class="insight"><h3>Glow gap</h3><p>Few lines ship a true twin calm edition. Intervention series (Moon Dogs) help older strugglers; your Glow is early-child + design-led, not a separate babyish track.</p></div>
   </div>
 
-  <div class="grid2">
-    <section class="panel">
-      <h2>DLS product-fit ranking</h2>
-      <div class="fit-row ours"><div class="fit-label">Phonics Moves / Phonics Glow (DLS)</div><div class="fit-track"><div class="fit-fill" style="width:85%"></div></div><div class="fit-val">4.29</div></div><div class="fit-row "><div class="fit-label">SPELD SA Phonic Books</div><div class="fit-track"><div class="fit-fill" style="width:77%"></div></div><div class="fit-val">3.89</div></div><div class="fit-row "><div class="fit-label">Little Learners Love Literacy</div><div class="fit-track"><div class="fit-fill" style="width:76%"></div></div><div class="fit-val">3.80</div></div><div class="fit-row "><div class="fit-label">InitiaLit Readers (MultiLit)</div><div class="fit-track"><div class="fit-fill" style="width:74%"></div></div><div class="fit-val">3.71</div></div><div class="fit-row "><div class="fit-label">Phonic Books — Dandelion Launchers/Readers</div><div class="fit-track"><div class="fit-fill" style="width:72%"></div></div><div class="fit-val">3.63</div></div><div class="fit-row "><div class="fit-label">Phonic Books — Moon Dogs / Totem / Talisman</div><div class="fit-track"><div class="fit-fill" style="width:72%"></div></div><div class="fit-val">3.62</div></div><div class="fit-row "><div class="fit-label">UFLI Foundations (aligners)</div><div class="fit-track"><div class="fit-fill" style="width:71%"></div></div><div class="fit-val">3.58</div></div><div class="fit-row "><div class="fit-label">Fitzroy Readers</div><div class="fit-track"><div class="fit-fill" style="width:69%"></div></div><div class="fit-val">3.49</div></div><div class="fit-row "><div class="fit-label">Sounds-Write readers</div><div class="fit-track"><div class="fit-fill" style="width:68%"></div></div><div class="fit-val">3.42</div></div><div class="fit-row "><div class="fit-label">Flyleaf Publishing</div><div class="fit-track"><div class="fit-fill" style="width:66%"></div></div><div class="fit-val">3.32</div></div><div class="fit-row "><div class="fit-label">Little Wandle + Big Cat Phonics</div><div class="fit-track"><div class="fit-fill" style="width:64%"></div></div><div class="fit-val">3.23</div></div><div class="fit-row "><div class="fit-label">Bug Club Phonics</div><div class="fit-track"><div class="fit-fill" style="width:61%"></div></div><div class="fit-val">3.06</div></div><div class="fit-row "><div class="fit-label">Just Right Reader</div><div class="fit-track"><div class="fit-fill" style="width:60%"></div></div><div class="fit-val">3.04</div></div><div class="fit-row "><div class="fit-label">Read Write Inc. Phonics</div><div class="fit-track"><div class="fit-fill" style="width:58%"></div></div><div class="fit-val">2.94</div></div><div class="fit-row "><div class="fit-label">Geodes (Great Minds / Wilson)</div><div class="fit-track"><div class="fit-fill" style="width:58%"></div></div><div class="fit-val">2.94</div></div>
-    </section>
-    <section class="panel">
-      <h2>Strict code × story craft</h2>
-      <div class="scatter"><div class="dot other" style="left:90.0%;bottom:30.0%" title="Phonic Books — Dandelion Launchers/Readers"><i>Phonic Books</i></div><div class="dot other" style="left:90.0%;bottom:50.0%" title="Phonic Books — Moon Dogs / Totem / Talisman"><i>Phonic Books</i></div><div class="dot other" style="left:70.0%;bottom:50.0%" title="Read Write Inc. Phonics"><i>Read Write Inc. Phonics</i></div><div class="dot other" style="left:70.0%;bottom:70.0%" title="Little Wandle + Big Cat Phonics"><i>Little Wandle + Big Cat Ph…</i></div><div class="dot other" style="left:70.0%;bottom:70.0%" title="Bug Club Phonics"><i>Bug Club Phonics</i></div><div class="dot other" style="left:90.0%;bottom:70.0%" title="Little Learners Love Literacy"><i>Little Learners Love Liter…</i></div><div class="dot other" style="left:90.0%;bottom:50.0%" title="InitiaLit Readers (MultiLit)"><i>InitiaLit Readers</i></div><div class="dot other" style="left:90.0%;bottom:30.0%" title="SPELD SA Phonic Books"><i>SPELD SA Phonic Books</i></div><div class="dot other" style="left:70.0%;bottom:50.0%" title="Fitzroy Readers"><i>Fitzroy Readers</i></div><div class="dot other" style="left:90.0%;bottom:50.0%" title="UFLI Foundations (aligners)"><i>UFLI Foundations</i></div><div class="dot other" style="left:70.0%;bottom:90.0%" title="Flyleaf Publishing"><i>Flyleaf Publishing</i></div><div class="dot other" style="left:50.0%;bottom:90.0%" title="Geodes (Great Minds / Wilson)"><i>Geodes</i></div><div class="dot other" style="left:70.0%;bottom:50.0%" title="Just Right Reader"><i>Just Right Reader</i></div><div class="dot other" style="left:90.0%;bottom:30.0%" title="Sounds-Write readers"><i>Sounds-Write readers</i></div><div class="dot ours" style="left:90.0%;bottom:70.0%" title="Phonics Moves / Phonics Glow (DLS)"><i>Phonics Moves / Phonics Glow</i></div></div>
-      <div class="axis"><span>← weaker decode</span><span>stronger decode →</span></div>
-      <div class="axis"><span>story ↑</span><span>teal band = target</span></div>
-    </section>
-  </div>
+  <section class="panel">
+    <h2>DLS product-fit ranking</h2>
+    <div class="fit-row ours"><div class="fit-label">Phonics Moves / Phonics Glow (DLS)</div><div class="fit-track"><div class="fit-fill" style="width:85%"></div></div><div class="fit-val">4.29</div></div><div class="fit-row "><div class="fit-label">SPELD SA Phonic Books</div><div class="fit-track"><div class="fit-fill" style="width:77%"></div></div><div class="fit-val">3.89</div></div><div class="fit-row "><div class="fit-label">Little Learners Love Literacy</div><div class="fit-track"><div class="fit-fill" style="width:76%"></div></div><div class="fit-val">3.80</div></div><div class="fit-row "><div class="fit-label">InitiaLit Readers (MultiLit)</div><div class="fit-track"><div class="fit-fill" style="width:74%"></div></div><div class="fit-val">3.71</div></div><div class="fit-row "><div class="fit-label">Phonic Books — Dandelion Launchers/Readers</div><div class="fit-track"><div class="fit-fill" style="width:72%"></div></div><div class="fit-val">3.63</div></div><div class="fit-row "><div class="fit-label">Phonic Books — Moon Dogs / Totem / Talisman</div><div class="fit-track"><div class="fit-fill" style="width:72%"></div></div><div class="fit-val">3.62</div></div><div class="fit-row "><div class="fit-label">UFLI Foundations (aligners)</div><div class="fit-track"><div class="fit-fill" style="width:71%"></div></div><div class="fit-val">3.58</div></div><div class="fit-row "><div class="fit-label">Fitzroy Readers</div><div class="fit-track"><div class="fit-fill" style="width:69%"></div></div><div class="fit-val">3.49</div></div><div class="fit-row "><div class="fit-label">Sounds-Write readers</div><div class="fit-track"><div class="fit-fill" style="width:68%"></div></div><div class="fit-val">3.42</div></div><div class="fit-row "><div class="fit-label">Flyleaf Publishing</div><div class="fit-track"><div class="fit-fill" style="width:66%"></div></div><div class="fit-val">3.32</div></div><div class="fit-row "><div class="fit-label">Little Wandle + Big Cat Phonics</div><div class="fit-track"><div class="fit-fill" style="width:64%"></div></div><div class="fit-val">3.23</div></div><div class="fit-row "><div class="fit-label">Bug Club Phonics</div><div class="fit-track"><div class="fit-fill" style="width:61%"></div></div><div class="fit-val">3.06</div></div><div class="fit-row "><div class="fit-label">Just Right Reader</div><div class="fit-track"><div class="fit-fill" style="width:60%"></div></div><div class="fit-val">3.04</div></div><div class="fit-row "><div class="fit-label">Read Write Inc. Phonics</div><div class="fit-track"><div class="fit-fill" style="width:58%"></div></div><div class="fit-val">2.94</div></div><div class="fit-row "><div class="fit-label">Geodes (Great Minds / Wilson)</div><div class="fit-track"><div class="fit-fill" style="width:58%"></div></div><div class="fit-val">2.94</div></div>
+  </section>
+
+  <section class="panel">
+    <h2>Strict code × story craft</h2>
+    <p class="sub" style="margin:0 0 10px;font-size:13px;">Teal band = target quadrant (high decode + high story). Labels live in the legend so the plot stays readable — hover a dot for the full name.</p>
+    <div class="scatter-layout">
+      <div>
+        <div class="scatter"><div class="dot other" style="left:89.5%;bottom:26.5%" title="Phonic Books — Dandelion Launchers/Readers"></div><div class="dot other" style="left:94.0%;bottom:26.5%" title="SPELD SA Phonic Books"></div><div class="dot other" style="left:89.5%;bottom:31.5%" title="Sounds-Write readers"></div><div class="dot other" style="left:89.5%;bottom:47.5%" title="Phonic Books — Moon Dogs / Totem / Talisman"></div><div class="dot other" style="left:94.0%;bottom:47.5%" title="InitiaLit Readers (MultiLit)"></div><div class="dot other" style="left:89.5%;bottom:52.5%" title="UFLI Foundations (aligners)"></div><div class="dot other" style="left:68.5%;bottom:47.5%" title="Read Write Inc. Phonics"></div><div class="dot other" style="left:73.5%;bottom:47.5%" title="Fitzroy Readers"></div><div class="dot other" style="left:68.5%;bottom:52.5%" title="Just Right Reader"></div><div class="dot other" style="left:68.5%;bottom:68.5%" title="Little Wandle + Big Cat Phonics"></div><div class="dot other" style="left:73.5%;bottom:68.5%" title="Bug Club Phonics"></div><div class="dot other" style="left:89.5%;bottom:68.5%" title="Little Learners Love Literacy"></div><div class="dot ours" style="left:94.0%;bottom:68.5%" title="Phonics Moves / Phonics Glow (DLS)"><i class="onplot">Moves/Glow</i></div><div class="dot other" style="left:71.0%;bottom:92.0%" title="Flyleaf Publishing"></div><div class="dot other" style="left:50.0%;bottom:92.0%" title="Geodes (Great Minds / Wilson)"></div></div>
+        <div class="axis"><span>← weaker decode</span><span>stronger decode →</span></div>
+        <div class="axis"><span>story ↑</span><span>teal band = target</span></div>
+      </div>
+      <div>
+        <h2 style="font-size:13px;margin:0 0 10px;color:var(--muted);">Series (legend)</h2>
+        <ul class="legend"><li class="other"><span class="swatch"></span>Flyleaf Publishing <em>decode 4 · story 5</em></li><li class="other"><span class="swatch"></span>Geodes (Great Minds / Wilson) <em>decode 3 · story 5</em></li><li class="other"><span class="swatch"></span>Little Learners Love Literacy <em>decode 5 · story 4</em></li><li class="ours"><span class="swatch"></span>Phonics Moves / Phonics Glow (DLS) <em>decode 5 · story 4</em></li><li class="other"><span class="swatch"></span>Bug Club Phonics <em>decode 4 · story 4</em></li><li class="other"><span class="swatch"></span>Little Wandle + Big Cat Phonics <em>decode 4 · story 4</em></li><li class="other"><span class="swatch"></span>InitiaLit Readers (MultiLit) <em>decode 5 · story 3</em></li><li class="other"><span class="swatch"></span>Phonic Books — Moon Dogs / Totem / Talisman <em>decode 5 · story 3</em></li><li class="other"><span class="swatch"></span>UFLI Foundations (aligners) <em>decode 5 · story 3</em></li><li class="other"><span class="swatch"></span>Fitzroy Readers <em>decode 4 · story 3</em></li><li class="other"><span class="swatch"></span>Just Right Reader <em>decode 4 · story 3</em></li><li class="other"><span class="swatch"></span>Read Write Inc. Phonics <em>decode 4 · story 3</em></li><li class="other"><span class="swatch"></span>Phonic Books — Dandelion Launchers/Readers <em>decode 5 · story 2</em></li><li class="other"><span class="swatch"></span>SPELD SA Phonic Books <em>decode 5 · story 2</em></li><li class="other"><span class="swatch"></span>Sounds-Write readers <em>decode 5 · story 2</em></li></ul>
+      </div>
+    </div>
+  </section>
 
   <section class="panel scroll">
     <h2>Pedagogical heatmap (1–5)</h2>
@@ -205,8 +220,6 @@ table.heat th:first-child { text-align:left; max-width:220px; }
       <ul class="scores"><li><span>Decodability strictness</span><div class="bar"><span style="width:60%"></span></div><em>3</em></li><li><span>Sequence fineness</span><div class="bar"><span style="width:60%"></span></div><em>3</em></li><li><span>Story / engagement</span><div class="bar"><span style="width:100%"></span></div><em>5</em></li><li><span>Dyslexia-informed design</span><div class="bar"><span style="width:60%"></span></div><em>3</em></li><li><span>Home / parent friendly</span><div class="bar"><span style="width:40%"></span></div><em>2</em></li><li><span>School-system fit</span><div class="bar"><span style="width:100%"></span></div><em>5</em></li><li><span>Asia / SG relevance</span><div class="bar"><span style="width:40%"></span></div><em>2</em></li><li><span>Open / affordable access</span><div class="bar"><span style="width:20%"></span></div><em>1</em></li></ul>
       <footer>Overall 3.00 · DLS fit <strong>2.94</strong></footer>
     </article></div>
-
-  <p class="sub" style="margin-top:28px;">Peers to study closely for Moves/Glow: <strong>Dandelion</strong> (fineness), <strong>Flyleaf</strong> (story), <strong>LLLL / InitiaLit</strong> (AU classroom + Asia adjacency), <strong>SPELD SA</strong> (access ethos), <strong>Moon Dogs</strong> (age-respectful intervention). Avoid copying Geodes’ preteach-heavy model if baseline-no-break stays sacred.</p>
 </div>
 </body>
 </html>
